@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			div#box{
+				height: 400px;
+				width: 780px;
+				background: white;
+				margin-left: 100px;
+			}
+			
+			#box1{
+				height: 0px;
+				width: 0px;
+				border: 50px solid transparent;
+				border-left:none;
+				border-right-color: red;
+			}
+		</style>
+	</head>
+	<body>	
+		<div id="box">
+			<!--<svg xmlns="http://www.w3.org/2000/svg" height="100%" width="100%">
+				<g style="cursor:pointer">
+					<line x1="100" y1="100" x2="390" y2="200" stroke="#ccc"></line>
+					<line x1="100" y1="100" x2="390" y2="200" stroke="transparent" stroke-width="10" ></line>
+					<rect x="235" y="140" fill="#999" height="20" width="20" rx="5"></rect>
+					<text font-size="20px" x="245" y="158" text-anchor="middle">?</text>
+				</g>
+				<g>
+					<circle cx="100" cy="100" r="40" stroke="red" stroke-width="3" fill="white"></circle>
+					<text font-size="20px" x="100" y="108" text-anchor="middle">易车网</text>
+				</g>
+				<g>
+					<circle cx="390" cy="200" r="50" stroke="red" stroke-width="3" fill="white"></circle>
+					<text font-size="20px" x="390" y="208" text-anchor="middle">科鲁兹</text>
+				</g>
+			</svg>-->
+		</div>
+		<script type="text/javascript">
+			let ns = 'http://www.w3.org/2000/svg';
+			let centerl = box.offsetWidth /2;
+			let centert = box.offsetHeight /2
+			let data = {
+				centerNode:{text:'科鲁兹'},
+				otherNode:[
+				]
+			}
+			
+			let num = 9;
+		    let deg = 360/num;
+		    for(var i=0;i<num;i++){
+		      var y = Math.sin(deg*i*Math.PI/180)*150+centert;
+		      var x = Math.cos(deg*i*Math.PI/180)*150+centerl;
+		      data.otherNode.push({
+		      	x:x,
+		      	y:y,
+		      	text:i
+		      })
+		    }
+			function createTag(tagName,tagAtrr){
+				let tag = document.createElementNS(ns,tagName)
+				for(attr in tagAtrr){
+					tag.setAttribute(attr,tagAtrr[attr])
+				}
+				
+				return tag
+			}
+			
+			function addTag(){
+				let svg = createTag('svg',{
+					xmlns:"http://www.w3.org/2000/svg",
+					height:"100%",
+					width:"100%"
+				})
+				
+				 for(var i=0;i<data.otherNode.length;i++){
+			    	addOtherTag(data.otherNode[i],svg)
+			    }
+				box.appendChild(svg)
+				
+				let oG = createTag('g',{
+					style:"cursor:pointer"
+				})
+				
+				let oC = createTag('circle',{
+					cx:centerl,
+					cy:centert,
+					r: "40",
+					stroke:"red",
+					"stroke-width":"3",
+					fill:"white"
+				})
+				
+				let ot = createTag('text',{
+					"font-size":"20px",
+					x:centerl,
+					y:centert+8,
+					"text-anchor":"middle"
+				})
+				
+				ot.innerHTML = data.centerNode.text
+				
+				oG.appendChild(oC)
+			    oG.appendChild(ot)
+			    svg.appendChild(oG)
+			    
+			   
+				
+			}
+			
+			function addOtherTag(otherAttr,svg){
+				let oG1 = createTag('g',{
+					style:"cursor:pointer",
+					class:'lineStyle'
+				})
+				
+				let line1 = createTag('line',{
+					x1:otherAttr.x,
+					y1:otherAttr.y,
+					x2:centerl,
+					y2:centert, 
+					stroke:"#ccc"
+				})
+				
+				let line2 = createTag('line',{
+					x1:otherAttr.x,
+					y1:otherAttr.y,
+					x2:centerl,
+					y2:centert, 
+					stroke:"transparent",
+					'stroke-width':10
+				})
+				
+				let or1 = createTag('rect',{
+					x:(centerl+otherAttr.x)/2-10,
+					y:(centert+otherAttr.y)/2-10,
+					fill:"#999",
+					height:"20",
+					width:"20",
+					rx:"5"
+				})
+				
+				let ot1 = createTag('text',{
+					'font-size':"20px",
+					 x:(centerl+otherAttr.x)/2,
+					 y:(centert+otherAttr.y)/2+8,
+					 'text-anchor':"middle"
+				})
+				
+				ot1.innerHTML = '?'
+				
+				oG1.appendChild(line1)
+			    oG1.appendChild(line2)
+			     oG1.appendChild(or1)
+			      oG1.appendChild(ot1)
+			      svg.appendChild(oG1)
+			      
+			      let oG2 = createTag('g',{
+					style:"cursor:pointer",
+					class:'circleStyle'
+				})
+				
+				let oC2 = createTag('circle',{
+					cx:otherAttr.x,
+					cy:otherAttr.y,
+					r: "20",
+					stroke:"red",
+					"stroke-width":"3",
+					fill:"white"
+				})
+				let ot2 = createTag('text',{
+					"font-size":"20px",
+					x:otherAttr.x,
+					y:otherAttr.y+8,
+					"text-anchor":"middle"
+				})
+				
+				ot2.innerHTML = otherAttr.text
+				
+				oG2.appendChild(oC2)
+				oG2.appendChild(ot2)
+				svg.appendChild(oG2)
+				
+			}
+			
+			addTag()
+			
+			function bindTag(){
+				let line = document.getElementsByClassName('lineStyle')
+				let circle = document.getElementsByClassName('circleStyle')
+				for(var i=0;i<line.length;i++){
+					line[i].onmouseenter = function(){
+						this.querySelector('line').setAttribute('stroke','blue')
+					}
+					
+					circle[i].onmouseenter = function(){
+						this.previousElementSibling.querySelector('line').setAttribute('stroke','blue')
+						move(this.querySelector('circle'),30,40)
+					}
+					
+					line[i].onmouseleave = function(){
+						this.querySelector('line').setAttribute('stroke','#ccc')
+					}
+					
+					circle[i].onmouseleave = function(){
+						move(this.querySelector('circle'),40,30)
+						this.previousElementSibling.querySelector('line').setAttribute('stroke','#ccc')
+					}
+				}
+			}
+			
+			bindTag()
+			function move(obj,r1,r2){
+				var nowr = r1;
+				var overr = r2;
+				obj.speed = 0;
+				clearInterval(obj.timer);
+				obj.timer = setInterval(function(){
+					obj.speed +=(overr - nowr)/6
+					obj.speed *=0.75;
+					if(Math.abs(overr - nowr)<=1 && Math.abs(obj.speed) <=1){
+						clearInterval(obj.timer)
+						obj.setAttribute('r',overr)
+					}else{
+						nowr +=obj.speed
+						obj.setAttribute('r',nowr)
+					}
+				},30)
+			}
+		</script>
+	</body>
+</html>

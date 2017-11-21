@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+		   html{
+		   	background: gray;
+		   }
+			div{
+				height: 400px;
+				width: 400px;
+				background: white;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			
+		</div>
+		<script src="js/jquery.js"></script>
+		<script type="text/javascript">
+		    let svgNS = 'http://www.w3.org/2000/svg'
+			function createTag(tagName,objAttr){
+				let tag = document.createElementNS(svgNS,tagName);
+				for(var attr in objAttr){
+					tag.setAttribute(attr,objAttr[attr])
+				}
+				
+				return tag
+			}
+			
+			let svg = createTag('svg',{
+				height:'100%',
+				width:"100%",
+				xmls:svgNS
+			});
+			box.appendChild(svg)
+			// 百分比
+			let percentArr = [17.5,20.4,27.6,15.1,10.3,9.1];
+			// 外圆半径
+			let outerR = 70
+			// 内圆半径
+			let innerR = 50
+			// 圆心
+			let centerX = 200;
+			let centerY = 200;
+			// 颜色
+			let color = ['red','blue','green','black','gray'];
+			// 外圆坐标
+			
+			for(var i=0;i<percentArr.length;i++){
+				var path = createTag('path',{
+					fill:color[i]
+				})
+				svg.appendChild(path)
+			}
+			
+			let paths = svg.getElementsByTagName('path');
+			
+			$('#box').animate({
+				move:'auto'
+			},{
+				duration:500,
+				easing:'swing',
+				step:function(a,b){
+				let sum = 0
+					let outerXY = [
+			 {
+			 	x:270,
+			    y:200
+			 }
+			]
+			
+			// 内圆坐标
+			let innerXY = [
+			 {
+			 	x:250,
+			    y:200
+			 }
+			]
+					// 各点坐标
+			for(var i=0;i<percentArr.length;i++){
+				// 角度
+				sum += percentArr[i]
+				var p = sum/100*360
+				// 外
+				var ox = Math.cos(p*b.pos*Math.PI/180)*outerR + centerX
+				var oy = Math.sin(p*b.pos*Math.PI/180)*outerR + centerY
+				
+				outerXY.push({
+					x:ox,
+					y:oy
+				})
+				
+				// 内
+				var ix = Math.cos(p*b.pos*Math.PI/180)*innerR + centerX
+				var iy = Math.sin(p*b.pos*Math.PI/180)*innerR + centerY
+				
+				innerXY.push({
+					x:ix,
+					y:iy
+				})
+			}
+			for(var i=0;i<outerXY.length;i++){
+				if(i === outerXY.length-1){
+					break;
+				}
+				var d = 'M'+outerXY[i].x+' '+outerXY[i].y+'A'+ outerR+ ' '+ outerR +' 0 0 1 '+outerXY[i+1].x+' '+outerXY[i+1].y+'L'+ innerXY[i+1].x + ' ' + innerXY[i+1].y + 'A'+ innerR+ ' '+ innerR +' 0 0 0 '+ innerXY[i].x + ' '+innerXY[i].y + 'Z'
+				paths[i].setAttribute('d',d);
+			}
+				}
+			})
+		</script>
+	</body>
+</html>
